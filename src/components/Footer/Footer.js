@@ -1,47 +1,23 @@
-import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { Component } from 'react';
 
-class FooterPage extends React.Component {
+import {ContainerFooter, FooterOrganizer, SocialWebs, SocialIcons, Links} from './style';
+
+
+
+export default class Footer extends Component {
   render() {
     return (
-      <Container color="primary" className="font-small pt-4 mt-4">
-        <Container fluid className="text-center text-md-left">
-          <Row>
-            <Col md="6">
-              <h5 className="title">Footer Content</h5>
-              <p>
-                Serviços
-              </p>
-            </Col>
-            <Col md="6">
-              <h5 className="title">Links</h5>
-              <ul>
-                <li className="list-unstyled">
-                  <a href="#!">Link 1</a>
-                </li>
-                <li className="list-unstyled">
-                  <a href="#!">Link 2</a>
-                </li>
-                <li className="list-unstyled">
-                  <a href="#!">Link 3</a>
-                </li>
-                <li className="list-unstyled">
-                  <a href="#!">Link 4</a>
-                </li>
-              </ul>
-            </Col>
-          </Row>
-        </Container>
-        <div className="footer-copyright text-center py-3">
-          <Container fluid>
-            &copy; {new Date().getFullYear()} Copyright:{" "}
-            <a href="https://www.LabeNinja.com"> LabeNinja.com </a>
-          </Container>
-        </div>
-      </Container>
+        <ContainerFooter>
+            <FooterOrganizer>
+            <SocialWebs>
+                    <SocialIcons><Links target="blank" href="www.facebook.com"><i className="fab fa-facebook"></i></Links></SocialIcons>
+                    <SocialIcons><Links target="blank" href="www.instagram.com"><i className="fab fa-instagram"></i></Links></SocialIcons>
+                    <SocialIcons><Links target="blank" href="#"><i className="fab fa-bitcoin"></i></Links></SocialIcons>
+                    <SocialIcons><Links target="blank" href="#"><i className="fab fa-amazon-pay"></i></Links></SocialIcons>
+                    <SocialIcons><Links target="blank" href="#"><i className="fab fa-apple-pay"></i></Links></SocialIcons>
+            </SocialWebs>
+            </FooterOrganizer>
+        </ContainerFooter>
     );
   }
 }
-
-export default FooterPage;

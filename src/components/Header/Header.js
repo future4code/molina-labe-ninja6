@@ -1,62 +1,22 @@
-import React from 'react'
-import styled from 'styled-components';
-
-const AreaHeader = styled.div`
-    border: 2px solid red;
-    height: 60px;
-    
-    
-    .container{
-        padding:  5px 20px;
-        display: flex;
-        align-items: center;
-
-    }
-        .logo{
-            border: 2px solid red;
-            flex: 1;
-
-        }
-
-        nav{
-            border: 2px solid red;
-            ul{
-                display: flex;
-                
-            }
-                li{
-                    list-style: none;    
-                    margin-left: 20px;
-                    
-                   
-                }
-
-        }
-`;
+import React, { Component } from 'react';
 
 
+import { Container, ContainerHeader, Logo, HeaderFl, Button, Img } from './style';
 
 
-
-const Header = () => {
+export default class Header extends Component {
+  render() {
     return (
-       <AreaHeader>
-            <div className="container">
-            <div className="logo">
-            
-            </div>
-            <nav>
-                <ul>
-                    <li>Como funciona?</li>
-                    <li>Seja um profissional</li>
-                    <li>LOGIN</li>
-                </ul>
-            </nav>
-            </div>
-        
-
-       </AreaHeader>
+        <Container>
+          <ContainerHeader >
+            <Logo><Img onClick={this.props.onChangeHome} src={require("../../imgs/logo.png")} /> {/* botar um onClick para renderizar a home quando a logo for clicada */} </Logo> 
+              <HeaderFl>
+                  <Button onClick={this.props.onChangeQueroTrabalhar}>Ver Vagas</Button>            
+                  <Button onClick={this.props.onChangeQueroTrabalhar}>Sou Empresa</Button>            
+                  <Button onClick={this.props.onChangeQueroTrabalhar}>Sou Profissional</Button>                       
+              </HeaderFl>
+          </ContainerHeader >
+        </Container>
     );
+  }
 }
-
-export default Header;
