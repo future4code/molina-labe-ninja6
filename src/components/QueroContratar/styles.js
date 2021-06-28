@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 
 
+
+
 export const Main = styled.main`
  background: #ffff;
  height: 125vh;
@@ -14,10 +16,14 @@ export const DivMain = styled.div`
     position: absolute;
     margin: 5vh 5vw;
     width: 60vw;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `
 
 export const Descricao = styled.textarea `
-    width: 70%;
+    width: 90%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;

@@ -1,58 +1,115 @@
-import React, { Component} from 'react';
-import axios from 'axios';
+import React from "react"
+import JobCard from "../JobCard/JobCard"
+import axios from "axios"
+import { BASE_URL, headers } from '../../constants/urls'
+import { JobsListContainer, FiltersContainer } from "./styles"
 
-import { Container, Input  } from './styles';
+class FiltroVaga extends React.Component {
+    state = {
+        jobsList: [],
+        filteredJobsList: [],
+        minVal: "",
+        maxVal: "",
+        search: "",
+        order: "",
+    }
 
-export default class FiltroVaga extends Component {
+    componentDidMount() {
+        this.getJobs()
+        this.filterJobs()
+    }
 
-  state = {
-    inputValorMaximo: '',
-    inputValorMinimo: ''
-  }
+    componentDidUpdate(prevProps, prevState){
+        if(
+            this.state.minVal !== prevState.minVal ||
+            this.state.maxVal !== prevState.maxVal ||
+            this.state.search !== prevState.search ||
+            this.state.order !== prevState.order
+        ) {
+            this.filterJobs()
+        }
+    }
 
-  onChangeInputValorMaximo = (event) => {
-    this.setState({
-      inputValorMaximo: event.target.value
-    })
-  }
-  
-  onChangeInputValorMinimo = (event) => {
-    this.setState({
-      inputValorMinimo: event.target.value
-    })
-  }
+    handleMinVal = (e) => {
+        this.setState({minVal: e.target.value})
+    }
 
-  onClickFiltrar = () => {
-    this.props.filtroValor(this.state.inputValorMinimo, this.state.inputValorMaximo)
-  }
+    handleMaxVal = (e) => {
+        this.setState({maxVal: e.target.value})
+    }
 
-  render() {
-    return(
-        <Container>
-            <h3>Vagas</h3>
-            <p>253 resultados</p>
+    handleSearch = (e) => {
+        this.setState({search: e.target.value})
+    }
 
-            <h3>Localização</h3>
-            <p>São Paulo (141)</p>
-            <p>Brasília (44)</p>
-            <p>Florianópolis (43)</p>
-            <p>Rio de Janeiro (14)</p>
-            <p>Curitiba (8)</p>
+    handleOrder = (e) => {
+        this.setState({order: e.target.value})
+    }
 
-            <h3>Tipo de trabalho</h3>
-            <p>Aceita remoto (34)</p>
-            <p>Apenas presencial (100)</p>
+    getJobs = () => {
+        axios.get(`${BASE_URL}/jobs`, headers)
+            .then((res) => {
+                this.setState({ jobsList: res.data.jobs, filteredJobsList: res.data.jobs })
+            })
+            .catch((err) => {
+                alert(err.response.data.message)
+            })
+    }
 
-            <h3>Filtro por valor</h3>
-            <Input type="number" onChange={this.onChangeInputValorMinimo} value={this.state.inputValorMinimo}  placeholder="Min"/> 
-            
-            <span>-</span>
-            
-            <Input type="number" onChange={this.onChangeInputValorMaximo} value={this.state.inputValorMaximo} placeholder="Máx"/>
+    filterJobs = () => {
+        const maximum = this.state.maxVal ? Number(this.state.maxVal) : Infinity
+        const minimum = this.state.minVal ? Number(this.state.minVal) : -Infinity
 
-            <button onClick={this.onClickFiltrar}>Filtrar</button>
-            
-        </Container>
-    )
-  }
+        const newJobsList = this.state.jobsList
+            .filter((job) => job.price >= minimum)
+            .filter((job) => job.price <= maximum)
+            .filter((job) => {
+                const jobTitle = job.title.toLowerCase()
+                const jobDescription = job.description.toLowerCase()
+                const searchText = this.state.search.toLocaleLowerCase()
+                return jobTitle.includes(searchText) || jobDescription.includes(searchText)
+            }).sort((a, b) => {
+                switch (this.state.order){
+                    case "Menor Valor":
+                        return a.price - b.price
+                    case "Maior Valor":
+                        return b.price - a.price
+                    case "Título":
+                        return a.title.localeCompare(b.title)
+                    case "Prazo":
+                        return a.dueDate.localeCompare(b.dueDate)
+                }
+            })
+
+        this.setState({filteredJobsList: newJobsList})
+    }
+
+    render() {
+        const jobComponents = this.state.filteredJobsList.map((job) => {
+            return <JobCard key={job.id} job={job} goToDetailPage={this.props.goToDetailPage} addToCart={this.props.addToCart}/>
+        })
+
+        return (
+            <div>
+                <FiltersContainer>
+                    <input value={this.state.minVal} onChange={this.handleMinVal} placeholder="Valor Mínimo"/>
+                    <input value={this.state.maxVal} onChange={this.handleMaxVal} placeholder="Valor Máximo"/>
+                    <input value={this.state.search} onChange={this.handleSearch} placeholder="Busca por título ou descrição"/>
+                    <select value={this.state.order} onChange={this.handleOrder}>
+                        <option>Sem Ordenação</option>
+                        <option>Menor Valor</option>
+                        <option>Maior Valor</option>
+                        <option>Título</option>
+                        <option>Prazo</option>
+                    </select>
+                </FiltersContainer>
+
+                <JobsListContainer>
+                    {jobComponents}
+                </JobsListContainer>
+            </div>
+        )
+    }
 }
+
+export default FiltroVaga

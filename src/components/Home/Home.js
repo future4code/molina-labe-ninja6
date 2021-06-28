@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { Container, Section, Main, DivMain, 
 ContainerItens, Item,SectionDetails, ContainerDetails, Buttonn ,Span, SpanIcons } from './styles';
 import Header from '../Header/Header';
-//import Footer from '../Footer/Footer';
+import Footer from '../Footer/Footer';
 
 
 
@@ -83,7 +83,7 @@ class Home extends React.Component {
                     </Span>
                 </ContainerDetails>
               </SectionDetails>
-        
+              <Footer/>  
         
             </Container>
            
